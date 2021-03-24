@@ -12,7 +12,7 @@ pipeline {
 
     stage('Checkout Source Code') {
       steps {
-        git 'https://github.com/chetangautamm/k8s-deployment.git'
+        git 'https://github.com/chetangautamm/helm-k8s-deployment.git'
       }
     }
     
