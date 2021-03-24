@@ -20,12 +20,15 @@ pipeline {
     stage('Deploying Opensips CNF') {
       steps {
         sshagent(['k8suser']) {
-          sh "scp -o StrictHostKeyChecking=no -q opensips.yaml k8suser@52.172.221.4:/home/k8suser"
           script {
             try {
-              sh "ssh k8suser@52.172.221.4 kubectl apply -f opensips.yaml"
+              sh "ssh k8suser@52.172.221.4 helm install opensips https://chetangautamm.github.io/helm/opensips-0.1.0.tgz"
+              sh "ssh k8suser@52.172.221.4 helm install uas https://chetangautamm.github.io/helm/sipp-0.1.0.tgz"
+              sh "ssh k8suser@52.172.221.4 helm install uas https://chetangautamm.github.io/helm/sipp-0.1.0.tgz"
             }catch(error){
-              sh "ssh k8suser@52.172.221.4 kubectl apply -f opensips.yaml"
+              sh "ssh k8suser@52.172.221.4 helm install opensips https://chetangautamm.github.io/helm/opensips-0.1.0.tgz"
+              sh "ssh k8suser@52.172.221.4 helm install uas https://chetangautamm.github.io/helm/sipp-0.1.0.tgz"
+              sh "ssh k8suser@52.172.221.4 helm install uas https://chetangautamm.github.io/helm/sipp-0.1.0.tgz"
             } 
           }
         }              
