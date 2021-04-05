@@ -36,12 +36,12 @@ pipeline {
     }
     stage('Validating Opensips Using SIPp') {
       steps {
-        sh "chmod +x configure.sh"
+        sh "chmod +x configure-helm.sh"
         sshagent(['k8suser']) {
-          sh "scp -o StrictHostKeyChecking=no -q configure.sh k8suser@52.172.221.4:/home/k8suser"
+          sh "scp -o StrictHostKeyChecking=no -q configure-helm.sh k8suser@52.172.221.4:/home/k8suser"
           script {
             sh "sleep 10"
-            sh "ssh k8suser@52.172.221.4 ./configure.sh"
+            sh "ssh k8suser@52.172.221.4 ./configure-helm.sh"
           }
         }              
       }
