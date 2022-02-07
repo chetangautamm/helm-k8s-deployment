@@ -56,7 +56,7 @@ pipeline {
         }
       }
     }
-    stage('Validating Opensips Using SIPp on Kubespray'') {
+    stage('Validating Opensips Using SIPp on Kubespray') {
       steps {
         sh "chmod +x configure-helm.sh"
         sshagent(['kubeadm']) {
