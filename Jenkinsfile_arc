@@ -1,0 +1,123 @@
+pipeline {
+
+  environment {
+    registry = "chetangautamm/repo"
+    registryCredential = '58881f31-29bb-48a8-9da9-fc254654146d'
+    dockerImage = ""
+  }
+
+  agent any
+
+  stages {
+
+    stage('Checkout Source Code') {
+      steps {
+        git 'https://github.com/chetangautamm/helm-k8s-deployment.git'
+      }
+    }
+
+
+   stage('Deploying Opensips CNF on Kubespray') {
+      steps {
+        sshagent(['k8suser']) {
+          script {
+            try {
+              sh "ssh k8suser@52.172.221.4 helm install opensips https://chetangautamm.github.io/helm/opensips-0.1.0.tgz"
+            }catch(error){
+              sh "ssh k8suser@52.172.221.4 helm install opensips https://chetangautamm.github.io/helm/opensips-0.1.0.tgz"
+            }
+          }
+        }
+      }
+    }
+    stage('Deploying UAS on Kubespray') {
+      steps {
+        sshagent(['k8suser']) {
+          script {
+            try {
+              sh "ssh k8suser@52.172.221.4 helm install uas https://chetangautamm.github.io/helm/sipp-0.1.0.tgz"
+            }catch(error){
+              sh "ssh k8suser@52.172.221.4 helm install uas https://chetangautamm.github.io/helm/sipp-0.1.0.tgz"
+            }
+          }
+        }
+      }
+    }
+    stage('Deploying UAC on Kubespray') {
+      steps {
+        sshagent(['k8suser']) {
+          script {
+            try {
+              sh "ssh k8suser@52.172.221.4 helm install uac https://chetangautamm.github.io/helm/sipp-0.1.0.tgz"
+            }catch(error){
+              sh "ssh k8suser@52.172.221.4 helm install uac https://chetangautamm.github.io/helm/sipp-0.1.0.tgz"
+            }
+          }
+        }
+      }
+    }
+    stage('Validating Opensips Using SIPp on Kubespray'') {
+      steps {
+        sh "chmod +x configure-helm.sh"
+        sshagent(['k8suser']) {
+          sh "scp -o StrictHostKeyChecking=no -q configure-helm.sh k8suser@52.172.221.4:/home/k8suser"
+          script {
+            sh "sleep 10"
+            sh "ssh k8suser@52.172.221.4 ./configure-helm.sh"
+          }
+        }
+      }
+    }
+   stage('Deploying Opensips CNF  on KIND') {
+      steps {
+        sshagent(['kind']) {
+          script {
+            try {
+              sh "ssh ubuntu@3.111.23.250 helm install opensips https://chetangautamm.github.io/helm/opensips-0.1.0.tgz"
+            }catch(error){
+              sh "ssh ubuntu@3.111.23.250 helm install opensips https://chetangautamm.github.io/helm/opensips-0.1.0.tgz"
+            }
+          }
+        }
+      }
+    }
+    stage('Deploying UAS on KIND') {
+      steps {
+        sshagent(['kind']) {
+          script {
+            try {
+              sh "ssh ubuntu@3.111.23.250 helm install uas https://chetangautamm.github.io/helm/sipp-0.1.0.tgz"
+            }catch(error){
+              sh "ssh ubuntu@3.111.23.250 helm install uas https://chetangautamm.github.io/helm/sipp-0.1.0.tgz"
+            }
+          }
+        }
+      }
+    }
+    stage('Deploying UAC on KIND') {
+      steps {
+        sshagent(['kind']) {
+          script {
+            try {
+              sh "ssh ubuntu@3.111.23.250 helm install uac https://chetangautamm.github.io/helm/sipp-0.1.0.tgz"
+            }catch(error){
+              sh "ssh ubuntu@3.111.23.250 helm install uac https://chetangautamm.github.io/helm/sipp-0.1.0.tgz"
+            }
+          }
+        }
+      }
+    }
+   stage('Validating Opensips Using SIPp on KIND') {
+      steps {
+        sh "chmod +x configure-helm.sh"
+        sshagent(['kind']) {
+          sh "scp -o StrictHostKeyChecking=no -q configure-helm.sh ubuntu@3.111.23.250:/home/ubuntu"
+          script {
+            sh "sleep 10"
+            sh "ssh ubuntu@3.111.23.250 ./configure-helm.sh"
+          }
+        }
+      }
+    }
+  }
+}
