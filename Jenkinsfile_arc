@@ -60,7 +60,7 @@ pipeline {
       steps {
         sh "chmod +x configure-helm.sh"
         sshagent(['kubeadm']) {
-          sh "scp -o StrictHostKeyChecking=no -q configure-helm.sh kubeadm@20.193.238.113:/home/k8suser"
+          sh "scp -o StrictHostKeyChecking=no -q configure-helm.sh kubeadm@20.193.238.113:/home/kubeadm"
           script {
             sh "sleep 10"
             sh "ssh kubeadm@20.193.238.113 ./configure-helm.sh"
