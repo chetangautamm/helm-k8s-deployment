@@ -19,12 +19,12 @@ pipeline {
 
    stage('Deploying Opensips CNF on Kubespray') {
       steps {
-        sshagent(['k8suser']) {
+        sshagent(['kubeadm']) {
           script {
             try {
-              sh "ssh k8suser@52.172.221.4 helm install opensips https://chetangautamm.github.io/helm/opensips-0.1.0.tgz"
+              sh "ssh kubeadm@20.193.238.113 helm install opensips https://chetangautamm.github.io/helm/opensips-0.1.0.tgz"
             }catch(error){
-              sh "ssh k8suser@52.172.221.4 helm install opensips https://chetangautamm.github.io/helm/opensips-0.1.0.tgz"
+              sh "ssh kubeadm@20.193.238.113 helm install opensips https://chetangautamm.github.io/helm/opensips-0.1.0.tgz"
             }
           }
         }
@@ -32,12 +32,12 @@ pipeline {
     }
     stage('Deploying UAS on Kubespray') {
       steps {
-        sshagent(['k8suser']) {
+        sshagent(['kubeadm']) {
           script {
             try {
-              sh "ssh k8suser@52.172.221.4 helm install uas https://chetangautamm.github.io/helm/sipp-0.1.0.tgz"
+              sh "ssh kubeadm@20.193.238.113 helm install uas https://chetangautamm.github.io/helm/sipp-0.1.0.tgz"
             }catch(error){
-              sh "ssh k8suser@52.172.221.4 helm install uas https://chetangautamm.github.io/helm/sipp-0.1.0.tgz"
+              sh "ssh kubeadm@20.193.238.113 helm install uas https://chetangautamm.github.io/helm/sipp-0.1.0.tgz"
             }
           }
         }
@@ -45,12 +45,12 @@ pipeline {
     }
     stage('Deploying UAC on Kubespray') {
       steps {
-        sshagent(['k8suser']) {
+        sshagent(['kubeadm']) {
           script {
             try {
-              sh "ssh k8suser@52.172.221.4 helm install uac https://chetangautamm.github.io/helm/sipp-0.1.0.tgz"
+              sh "ssh kubeadm@20.193.238.113 helm install uac https://chetangautamm.github.io/helm/sipp-0.1.0.tgz"
             }catch(error){
-              sh "ssh k8suser@52.172.221.4 helm install uac https://chetangautamm.github.io/helm/sipp-0.1.0.tgz"
+              sh "ssh kubeadm@20.193.238.113 helm install uac https://chetangautamm.github.io/helm/sipp-0.1.0.tgz"
             }
           }
         }
@@ -59,11 +59,11 @@ pipeline {
     stage('Validating Opensips Using SIPp on Kubespray'') {
       steps {
         sh "chmod +x configure-helm.sh"
-        sshagent(['k8suser']) {
-          sh "scp -o StrictHostKeyChecking=no -q configure-helm.sh k8suser@52.172.221.4:/home/k8suser"
+        sshagent(['kubeadm']) {
+          sh "scp -o StrictHostKeyChecking=no -q configure-helm.sh kubeadm@20.193.238.113:/home/k8suser"
           script {
             sh "sleep 10"
-            sh "ssh k8suser@52.172.221.4 ./configure-helm.sh"
+            sh "ssh kubeadm@20.193.238.113 ./configure-helm.sh"
           }
         }
       }
